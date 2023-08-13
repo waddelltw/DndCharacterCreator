@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var isLoggedIn = ViewData["IsLoggedIn"];
+}
+
+<div class="text-center">
+    <h1 class="display-5">Welcome to the DnD Character Creator</h1>
+    <hr />
+    <br />
+    @if(isLoggedIn == null || !(bool)isLoggedIn)
+    {
+        <p class="lead">Create an account or login to get started!</p>
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary">Click here to create a new account</a>
+        <br />
+        <br />
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary">Click here to login to an existing account</a>
+    }
+    else
+    {
+        <p class="lead">Welcome back @ViewData["User"]!</p>
+        <p>View your characters by clicking below</p>
+        <a asp-controller="Characters" asp-action="Index" class="btn btn-primary">Character List</a>
+    }
+</div>

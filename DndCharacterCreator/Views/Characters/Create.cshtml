@@ -1,0 +1,148 @@
+﻿@model CreateCharacterVM
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="row text-center">
+    <h1>Create your character!</h1>
+</div>
+
+<hr />
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to character list</a>
+</div>
+<form asp-action="Create" class="container">
+    <br />
+    <div class="row justify-content-center text-center">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group col-4">
+            <label asp-for="Name" class="control-label">Character Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <br />
+    <div class="row justify-content-center">
+        <div class="form-group col-2">
+            <label asp-for="Race" class="control-label"></label>
+            <select asp-for="Race" class="form-control">
+                @foreach (var race in Enum.GetValues(typeof(Race)))
+                {
+                    <option value="@race">@race.ToString()</option>
+                }
+            </select>
+            <span asp-validation-for="Race" class="text-danger"></span>
+        </div>
+        <div class="form-group col-2">
+            <label asp-for="Class" class="control-label"></label>
+            <select asp-for="Class" class="form-control">
+                @foreach (var classType in Enum.GetValues(typeof(Class)))
+                {
+                    <option value="@classType">@classType.ToString()</option>
+                }
+            </select>
+            <span asp-validation-for="Class" class="text-danger"></span>
+        </div>
+    </div>
+    <br />
+    <div class="row justify-content-center">
+        <button class="btn btn-primary col-2" onclick="rollAllStats()" type="button">Roll for all your stats!</button>
+    </div>
+    <br />
+    <div class="row justify-content-center">
+        <div class="form-group col-1">
+            <label asp-for="Strength" class="control-label"></label>
+            <input asp-for="Strength" class="form-control" id="strength"/>
+            <span asp-validation-for="Strength" class="text-danger"></span>
+        </div>
+        <div class="col-2">
+            <br />
+            <button class="btn btn-primary" onclick="rollSingleStat('strength')" type="button">Roll</button>
+        </div>
+        <div class="form-group col-1">
+            <label asp-for="Dexterity" class="control-label"></label>
+            <input asp-for="Dexterity" class="form-control" id="dexterity"/>
+            <span asp-validation-for="Dexterity" class="text-danger"></span>
+        </div>
+        <div class="col-2">
+            <br />
+            <button class="btn btn-primary" onclick="rollSingleStat('dexterity')" type="button">Roll</button>
+        </div>
+        <div class="form-group col-1">
+            <label asp-for="Constitution" class="control-label"></label>
+            <input asp-for="Constitution" class="form-control" id="constitution"/>
+            <span asp-validation-for="Constitution" class="text-danger"></span>
+        </div>
+        <div class="col-2">
+            <br />
+            <button class="btn btn-primary" onclick="rollSingleStat('constitution')" type="button">Roll</button>
+        </div>
+    </div>
+    <br />
+    <div class="row justify-content-center">
+        <div class="form-group col-1">
+            <label asp-for="Intelligence" class="control-label"></label>
+            <input asp-for="Intelligence" class="form-control" id="intelligence"/>
+            <span asp-validation-for="Intelligence" class="text-danger"></span>
+        </div>
+        <div class="col-2">
+            <br />
+            <button class="btn btn-primary" onclick="rollSingleStat('intelligence')" type="button">Roll</button>
+        </div>
+        <div class="form-group col-1">
+            <label asp-for="Wisdom" class="control-label"></label>
+            <input asp-for="Wisdom" class="form-control" id="wisdom"/>
+            <span asp-validation-for="Wisdom" class="text-danger"></span>
+        </div>
+        <div class="col-2">
+            <br />
+            <button class="btn btn-primary" onclick="rollSingleStat('wisdom')" type="button">Roll</button>
+        </div>
+        <div class="form-group col-1">
+            <label asp-for="Charisma" class="control-label"></label>
+            <input asp-for="Charisma" class="form-control" id="charisma"/>
+            <span asp-validation-for="Charisma" class="text-danger"></span>
+        </div>
+        <div class="col-2">
+            <br />
+            <button class="btn btn-primary" onclick="rollSingleStat('charisma')" type="button">Roll</button>
+        </div>
+    </div>
+    <br />
+    <div class="row justify-content-center">
+        <div class="form-group col-2">
+            <label asp-for="Alignment" class="control-label"></label>
+            <select asp-for="Alignment" class="form-control">
+                @foreach (var alignment in Enum.GetValues(typeof(Alignment)))
+                {
+                    <option value="@alignment">@alignment.ToString()!.Replace('_', ' ')</option>
+                }
+            </select>
+            <span asp-validation-for="Alignment" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="form-group col-8">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <br />
+    <div class="row justify-content-center">
+        <div class="form-group col-8">
+            <label asp-for="Inventory" class="control-label"></label>
+            <textarea asp-for="Inventory" class="form-control"></textarea>
+            <span asp-validation-for="Inventory" class="text-danger"></span>
+        </div>
+    </div>
+    <br />
+    <div class="form-group row justify-content-center">
+        <input type="submit" value="Create this Character!" class="btn btn-primary col-2" style="text-wrap: balance"/>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
