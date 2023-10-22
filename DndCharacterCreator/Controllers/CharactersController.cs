@@ -26,7 +26,7 @@ namespace DndCharacterCreator.Controllers
         //Reads all character for the logged in user and returns a view of it
         public async Task<IActionResult> Index()
         {
-            if(User.Identity!.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 string username = User.Identity.Name ?? "";
                 var characters = await _repo.ReadAllAsync(username);
@@ -51,10 +51,10 @@ namespace DndCharacterCreator.Controllers
         //Reads the character from the given id and returns a view of it
         public async Task<IActionResult> Details(int id)
         {
-            if(User.Identity!.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 var character = await _repo.ReadAsync(id);
-                if(character != null)
+                if (character != null && User.Identity.Name == character.Player.UserName)
                 {
                     DetailsCharacterVM characterVM = new DetailsCharacterVM()
                     {
@@ -121,10 +121,10 @@ namespace DndCharacterCreator.Controllers
         //Returns the edit form to change an existing character
         public async Task<IActionResult> Edit(int id)
         {
-            if(User.Identity!.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 var character = await _repo.ReadAsync(id);
-                if(character != null)
+                if (character != null && User.Identity.Name == character.Player.UserName)
                 {
                     EditCharacterVM characterVM = new EditCharacterVM()
                     {
@@ -161,11 +161,19 @@ namespace DndCharacterCreator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditCharacterVM characterVM)
         {
-            var character = characterVM.GetCharacter();
-            if (ModelState.IsValid && User.Identity!.IsAuthenticated && character != null)
+            if (User.Identity!.IsAuthenticated)
             {
-                await _repo.UpdateAsync(character.Id, character);
-                return RedirectToAction("Details", new { character.Id });
+                var character = characterVM.GetCharacter();
+                var characterCheck = await _repo.ReadAsync(character.Id);
+                if (ModelState.IsValid && User.Identity!.IsAuthenticated && character != null && characterCheck != null && User.Identity.Name == characterCheck.Player.UserName)
+                {
+                    await _repo.UpdateAsync(character.Id, character);
+                    return RedirectToAction("Details", new { character.Id });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
             }
             else
             {
@@ -179,7 +187,7 @@ namespace DndCharacterCreator.Controllers
             if (User.Identity!.IsAuthenticated)
             {
                 var character = await _repo.ReadAsync(id);
-                if (character != null)
+                if (character != null && User.Identity.Name == character.Player.UserName)
                 {
                     DeleteCharacterVM characterVM = new DeleteCharacterVM()
                     {
@@ -204,10 +212,10 @@ namespace DndCharacterCreator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if(User.Identity!.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
                 var character = await _repo.ReadAsync(id);
-                if (character != null)
+                if (character != null && User.Identity.Name == character.Player.UserName)
                 {
                     _repo.DeleteAsync(id);
                     return RedirectToAction("Index");

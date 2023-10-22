@@ -24,7 +24,9 @@ namespace DndCharacterCreator.Services
 
         public async Task<Character?> ReadAsync(int id)
         {
-            var character = await _db.Characters.FindAsync(id);
+            var character = await _db.Characters
+                .Include(u => u.Player)
+                .FirstAsync(c => c.Id == id);
             return character;
         }
 
@@ -59,7 +61,7 @@ namespace DndCharacterCreator.Services
         public async void DeleteAsync(int id)
         {
             var character = await _db.Characters.FindAsync(id);
-            if(character != null)
+            if (character != null)
             {
                 _db.Characters.Remove(character);
                 await _db.SaveChangesAsync();
