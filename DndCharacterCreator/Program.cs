@@ -19,12 +19,21 @@ builder.Services.AddScoped<ICharacterRepository, DbCharacterRepository>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
+    // For the password requirements, you can adjust these settings to force the user to have these things in the password.
     options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequiredUniqueChars = 1;
+
+    // Lockout users if they cant login within 3 attempts.
+    //options.Lockout.AllowedForNewUsers = true;
+    //options.Lockout.MaxFailedAccessAttempts = 3;
+    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(4);
 });
+
 
 var app = builder.Build();
 
